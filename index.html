@@ -8,13 +8,7 @@
 </head>
 <body>
     <h1>다이사이(식보) 게임</h1>
-    <div id="balance">보유 자금: <span id="funds" style="color: red;">10000</span> 토큰</div>
-    <div id="bet-options">
-        <!-- 베팅 버튼들 -->
-        <button class="bet-btn" data-type="small" data-payout="1">작은 수 (1:1)</button>
-        <button class="bet-btn" data-type="big" data-payout="1">큰 수 (1:1)</button>
-        <!-- 다른 베팅 버튼들 추가 -->
-    </div>
+    <div id="balance">보유 자금: <span id="funds" class="red-text">10000</span> 토큰</div>
     <div id="token-options">
         <button class="token-btn" data-value="500">500</button>
         <button class="token-btn" data-value="1000">1000</button>
@@ -23,6 +17,11 @@
         <button class="token-btn" data-value="10000">10000</button>
         <button class="token-btn" data-value="50000">50000</button>
         <button class="token-btn" data-value="100000">100000</button>
+    </div>
+    <div id="bet-options">
+        <button class="bet-btn" data-type="small" data-payout="1">작은 수 (1:1)</button>
+        <button class="bet-btn" data-type="big" data-payout="1">큰 수 (1:1)</button>
+        <!-- Add more betting buttons as needed -->
     </div>
     <button id="roll-dice-btn">주사위 굴리기</button>
     <div id="bet-summary"></div>
