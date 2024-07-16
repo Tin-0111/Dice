@@ -1,17 +1,9 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-}
-
-#bet-options, #token-options {
-    margin: 20px 0;
-}
-
-.bet-btn, .token-btn {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
 }
 
 #balance {
@@ -19,10 +11,37 @@ body {
     margin: 20px 0;
 }
 
+.red-text {
+    color: red;
+}
+
+#token-options, #bet-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.token-btn, .bet-btn {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #333;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.token-btn:hover, .bet-btn:hover {
+    background-color: #333;
+    color: #fff;
+}
+
 #roll-dice-btn {
     margin-top: 20px;
     padding: 10px 20px;
     font-size: 18px;
+    cursor: pointer;
 }
 
 #bet-summary, #result-summary {
