@@ -14,10 +14,20 @@ document.querySelectorAll('.bet-btn').forEach(btn => {
         if (currentTokenValue > 0) {
             const betType = btn.getAttribute('data-type');
             const payout = parseInt(btn.getAttribute('data-payout'));
+
             if (!bets[betType]) {
                 bets[betType] = 0;
             }
             if (funds >= currentTokenValue) {
+                if ((betType === 'odd' && bets['even']) || (betType === 'even' && bets['odd'])) {
+                    alert("홀수와 짝수에 동시에 베팅할 수 없습니다.");
+                    return;
+                }
+                if ((betType === 'small' && bets['big']) || (betType === 'big' && bets['small'])) {
+                    alert("큰수와 작은수에 동시에 베팅할 수 없습니다.");
+                    return;
+                }
+
                 bets[betType] += currentTokenValue;
                 totalBetAmount += currentTokenValue;
                 funds -= currentTokenValue;
@@ -31,7 +41,6 @@ document.querySelectorAll('.bet-btn').forEach(btn => {
         }
     });
 });
-
 
 document.getElementById('roll-dice-btn').addEventListener('click', rollDice);
 
@@ -61,6 +70,7 @@ function rollDice() {
     resultSummary.innerHTML = `<h3>주사위 결과: ${dice1}, ${dice2}, ${dice3} (총합: ${total})</h3>`;
     const winSummary = document.createElement('div');
     const loseSummary = document.createElement('div');
+    let winningBets = [];
 
     for (const betType in bets) {
         const betAmount = bets[betType];
@@ -68,6 +78,7 @@ function rollDice() {
             const payout = calculatePayout(betType, betAmount, dice1, dice2, dice3);
             funds += payout + betAmount;
             winSummary.innerHTML += `<p class="red-text">${betType} 베팅 승리! +${payout + betAmount} 토큰</p>`;
+            winningBets.push(betType);
         } else {
             loseSummary.innerHTML += `<p style="color: blue;">${betType} 베팅 패배. -${betAmount} 토큰</p>`;
         }
@@ -79,7 +90,7 @@ function rollDice() {
     totalBetAmount = 0;
     updateFunds();
     updateBetSummary();
-    highlightWinningBets();
+    highlightWinningBets(winningBets, dice1, dice2, dice3, total);
 }
 
 function checkWin(betType, total, dice1, dice2, dice3) {
@@ -127,10 +138,27 @@ function calculatePayout(betType, betAmount, dice1, dice2, dice3) {
     }
 }
 
-function highlightWinningBets() {
-    const winningBets = document.querySelectorAll('.red-text');
-    winningBets.forEach(bet => {
-        const betType = bet.textContent.split(' ')[0];
+function highlightWinningBets(winningBets, dice1, dice2, dice3, total) {
+    const allWinningBets = new Set(winningBets);
+
+    if (total >= 4 && total <= 10 && !isTriple(dice1, dice2, dice3)) allWinningBets.add('small');
+    if (total >= 11 && total <= 17 && !isTriple(dice1, dice2, dice3)) allWinningBets.add('big');
+    if (isTriple(dice1, dice2, dice3)) allWinningBets.add('triple-any');
+    for (let i = 1; i <= 6; i++) {
+        if (isTriple(dice1, dice2, dice3) && dice1 === i) allWinningBets.add(`triple-${i}`);
+        if ([dice1, dice2, dice3].filter(dice => dice === i).length === 2) allWinningBets.add(`double-${i}`);
+        if ([dice1, dice2, dice3].includes(i)) allWinningBets.add(`one-${i}`);
+    }
+    if (total % 2 !== 0) allWinningBets.add('odd');
+    if (total % 2 === 0) allWinningBets.add('even');
+    allWinningBets.add(`${total}`);
+    for (let i = 1; i <= 6; i++) {
+        for (let j = i + 1; j <= 6; j++) {
+            if ([dice1, dice2, dice3].includes(i) && [dice1, dice2, dice3].includes(j)) allWinningBets.add(`pair-${i}-${j}`);
+        }
+    }
+
+    allWinningBets.forEach(betType => {
         const button = document.querySelector(`.bet-btn[data-type="${betType}"]`);
         if (button) {
             button.style.backgroundColor = 'red';
