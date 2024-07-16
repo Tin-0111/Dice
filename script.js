@@ -43,6 +43,7 @@ document.querySelectorAll('.bet-btn').forEach(btn => {
 });
 
 document.getElementById('roll-dice-btn').addEventListener('click', rollDice);
+document.getElementById('cancel-bet-btn').addEventListener('click', cancelBet);
 
 function updateFunds() {
     document.getElementById('funds').textContent = funds;
@@ -166,7 +167,26 @@ function highlightWinningBets(winningBets, dice1, dice2, dice3, total) {
     });
     setTimeout(() => {
         document.querySelectorAll('.bet-btn').forEach(button => {
-            button.style.backgroundColor = '#27ae60';
+            button.style.backgroundColor = 'green';
         });
     }, 2000);
+}
+
+function cancelBet() {
+    if (totalBetAmount > 0) {
+        // 현재 베팅 금액을 자금에 되돌려줍니다.
+        funds += totalBetAmount;
+        
+        // 베팅 정보 초기화
+        bets = {};
+        totalBetAmount = 0;
+        
+        // 업데이트 함수 호출
+        updateFunds();
+        updateBetSummary();
+        
+        alert("베팅이 취소되었습니다.");
+    } else {
+        alert("취소할 베팅이 없습니다.");
+    }
 }
