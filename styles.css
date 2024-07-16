@@ -39,3 +39,11 @@ button:disabled {
 h2 {
     margin-top: 20px;
 }
+
+.red {
+    color: red;
+}
+
+.balance {
+    margin-bottom: 20px;
+}
