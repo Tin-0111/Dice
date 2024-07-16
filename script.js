@@ -1,7 +1,6 @@
 let funds = 10000;
 let currentTokenValue = 0;
 let bets = {};
-let previousBets = {};
 let totalBetAmount = 0;
 
 document.querySelectorAll('.token-btn').forEach(btn => {
@@ -18,11 +17,15 @@ document.querySelectorAll('.bet-btn').forEach(btn => {
             if (!bets[betType]) {
                 bets[betType] = 0;
             }
-            bets[betType] += currentTokenValue;
-            totalBetAmount += currentTokenValue;
-            funds -= currentTokenValue;
-            updateFunds();
-            updateBetSummary();
+            if (funds >= currentTokenValue) {
+                bets[betType] += currentTokenValue;
+                totalBetAmount += currentTokenValue;
+                funds -= currentTokenValue;
+                updateFunds();
+                updateBetSummary();
+            } else {
+                alert("보유 자금이 부족합니다.");
+            }
         } else {
             alert("토큰을 먼저 선택하세요.");
         }
@@ -61,7 +64,7 @@ function rollDice() {
     for (const betType in bets) {
         const betAmount = bets[betType];
         if (checkWin(betType, total, dice1, dice2, dice3)) {
-            const payout = betAmount * parseInt(document.querySelector(`.bet-btn[data-type="${betType}"]`).getAttribute('data-payout'));
+            const payout = calculatePayout(betType, betAmount, dice1, dice2, dice3);
             funds += payout + betAmount;
             winSummary.innerHTML += `<p class="red-text">${betType} 베팅 승리! +${payout + betAmount} 토큰</p>`;
         } else {
@@ -71,12 +74,11 @@ function rollDice() {
 
     resultSummary.appendChild(winSummary);
     resultSummary.appendChild(loseSummary);
-    previousBets = bets;
     bets = {};
     totalBetAmount = 0;
     updateFunds();
     updateBetSummary();
-    highlightWinningBets(winSummary);
+    highlightWinningBets();
 }
 
 function checkWin(betType, total, dice1, dice2, dice3) {
@@ -112,16 +114,30 @@ function isTriple(dice1, dice2, dice3) {
     return dice1 === dice2 && dice2 === dice3;
 }
 
-function highlightWinningBets(winSummary) {
-    const winningBets = winSummary.querySelectorAll('.red-text');
+function calculatePayout(betType, betAmount, dice1, dice2, dice3) {
+    if (betType.startsWith('one-')) {
+        const number = parseInt(betType.split('-')[1]);
+        const count = [dice1, dice2, dice3].filter(dice => dice === number).length;
+        if (count === 1) return betAmount;
+        if (count === 2) return betAmount * 3;
+        if (count === 3) return betAmount * 5;
+    } else {
+        return betAmount * parseInt(document.querySelector(`.bet-btn[data-type="${betType}"]`).getAttribute('data-payout'));
+    }
+}
+
+function highlightWinningBets() {
+    const winningBets = document.querySelectorAll('.red-text');
     winningBets.forEach(bet => {
         const betType = bet.textContent.split(' ')[0];
         const button = document.querySelector(`.bet-btn[data-type="${betType}"]`);
         if (button) {
             button.style.backgroundColor = 'red';
-            setTimeout(() => {
-                button.style.backgroundColor = '#27ae60';
-            }, 1000);
         }
     });
+    setTimeout(() => {
+        document.querySelectorAll('.bet-btn').forEach(button => {
+            button.style.backgroundColor = '#27ae60';
+        });
+    }, 2000);
 }
