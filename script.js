@@ -52,10 +52,10 @@ function rollDice() {
 
     for (const betType in bets) {
         const betAmount = bets[betType];
-        if (checkWin(betType, total)) {
+        if (checkWin(betType, total, dice1, dice2, dice3)) {
             const payout = betAmount * parseInt(document.querySelector(`.bet-btn[data-type="${betType}"]`).getAttribute('data-payout'));
             funds += payout;
-            winSummary.innerHTML += `<p style="color: red;">${betType} 베팅 승리! +${payout} 토큰</p>`;
+            winSummary.innerHTML += `<p class="red-text">${betType} 베팅 승리! +${payout} 토큰</p>`;
         } else {
             loseSummary.innerHTML += `<p style="color: blue;">${betType} 베팅 패배. -${betAmount} 토큰</p>`;
         }
@@ -68,12 +68,34 @@ function rollDice() {
     updateBetSummary();
 }
 
-function checkWin(betType, total) {
+function checkWin(betType, total, dice1, dice2, dice3) {
     if (betType === 'small') {
-        return total >= 4 && total <= 10;
+        return total >= 4 && total <= 10 && !isTriple(dice1, dice2, dice3);
     } else if (betType === 'big') {
-        return total >= 11 && total <= 17;
+        return total >= 11 && total <= 17 && !isTriple(dice1, dice2, dice3);
+    } else if (betType === 'triple-any') {
+        return isTriple(dice1, dice2, dice3);
+    } else if (betType.startsWith('triple-')) {
+        const number = parseInt(betType.split('-')[1]);
+        return dice1 === number && dice2 === number && dice3 === number;
+    } else if (betType.startsWith('double-')) {
+        const number = parseInt(betType.split('-')[1]);
+        return (dice1 === number && dice2 === number) || (dice1 === number && dice3 === number) || (dice2 === number && dice3 === number);
+    } else if (!isNaN(parseInt(betType))) {
+        return total === parseInt(betType);
+    } else if (betType.startsWith('one-')) {
+        const number = parseInt(betType.split('-')[1]);
+        return [dice1, dice2, dice3].filter(dice => dice === number).length === 1;
+    } else if (betType.startsWith('two-')) {
+        const number = parseInt(betType.split('-')[1]);
+        return [dice1, dice2, dice3].filter(dice => dice === number).length === 2;
+    } else if (betType.startsWith('three-')) {
+        const number = parseInt(betType.split('-')[1]);
+        return [dice1, dice2, dice3].filter(dice => dice === number).length === 3;
     }
-    // 추가적인 베팅 유형 확인 로직 구현
     return false;
+}
+
+function isTriple(dice1, dice2, dice3) {
+    return dice1 === dice2 && dice2 === dice3;
 }
