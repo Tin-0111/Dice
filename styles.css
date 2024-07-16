@@ -14,6 +14,8 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
 }
 
 button {
@@ -36,6 +38,11 @@ button:disabled {
     justify-content: center;
 }
 
+.bet-buttons button, .token-buttons button {
+    flex: 1 1 calc(33.333% - 10px);
+    margin: 5px;
+}
+
 h2 {
     margin-top: 20px;
 }
@@ -46,4 +53,10 @@ h2 {
 
 .balance {
     margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .bet-buttons button, .token-buttons button {
+        flex: 1 1 calc(50% - 10px);
+    }
 }
