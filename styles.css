@@ -1,40 +1,52 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f0f0f0;
     margin: 0;
+    padding: 0;
+}
+
+h1 {
+    background-color: #f39c12;
+    color: white;
     padding: 20px;
+    margin: 0;
 }
 
 #balance {
+    margin: 20px;
     font-size: 20px;
-    margin: 20px 0;
+}
+
+#current-bet {
+    margin: 10px;
+    font-size: 18px;
 }
 
 .red-text {
     color: red;
 }
 
-#token-options, #bet-options {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 20px 0;
+#token-options, #bet-options, #bet-summary, #result-summary {
+    margin: 20px;
 }
 
-.token-btn, .bet-btn {
-    margin: 10px;
-    padding: 10px 20px;
+#token-options button, .bet-btn {
+    margin: 5px;
+    padding: 10px;
     font-size: 16px;
-    border: 2px solid #333;
-    background-color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    border: 2px solid #ccc;
+    border-radius: 5px;
 }
 
-.token-btn:hover, .bet-btn:hover {
-    background-color: #333;
-    color: #fff;
+#token-options button {
+    background-color: #2980b9;
+    color: white;
+}
+
+.bet-btn {
+    background-color: #27ae60;
+    color: white;
 }
 
 #roll-dice-btn {
