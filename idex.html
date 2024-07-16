@@ -10,44 +10,60 @@
     <div class="container">
         <h1>Dai Siu Game</h1>
         <div class="betting-options">
-            <button onclick="placeBet('small')">Bet on Small (4-10)</button>
-            <button onclick="placeBet('big')">Bet on Big (11-17)</button>
-            <button onclick="placeBet('double-1')">Bet on Double 1</button>
-            <button onclick="placeBet('double-2')">Bet on Double 2</button>
-            <button onclick="placeBet('double-3')">Bet on Double 3</button>
-            <button onclick="placeBet('double-4')">Bet on Double 4</button>
-            <button onclick="placeBet('double-5')">Bet on Double 5</button>
-            <button onclick="placeBet('double-6')">Bet on Double 6</button>
-            <button onclick="placeBet('triple-1')">Bet on Triple 1</button>
-            <button onclick="placeBet('triple-2')">Bet on Triple 2</button>
-            <button onclick="placeBet('triple-3')">Bet on Triple 3</button>
-            <button onclick="placeBet('triple-4')">Bet on Triple 4</button>
-            <button onclick="placeBet('triple-5')">Bet on Triple 5</button>
-            <button onclick="placeBet('triple-6')">Bet on Triple 6</button>
-            <button onclick="placeBet('any-triple')">Bet on Any Triple</button>
-            <button onclick="placeBet('total-4')">Bet on Total 4</button>
-            <button onclick="placeBet('total-5')">Bet on Total 5</button>
-            <button onclick="placeBet('total-6')">Bet on Total 6</button>
-            <button onclick="placeBet('total-7')">Bet on Total 7</button>
-            <button onclick="placeBet('total-8')">Bet on Total 8</button>
-            <button onclick="placeBet('total-9')">Bet on Total 9</button>
-            <button onclick="placeBet('total-10')">Bet on Total 10</button>
-            <button onclick="placeBet('total-11')">Bet on Total 11</button>
-            <button onclick="placeBet('total-12')">Bet on Total 12</button>
-            <button onclick="placeBet('total-13')">Bet on Total 13</button>
-            <button onclick="placeBet('total-14')">Bet on Total 14</button>
-            <button onclick="placeBet('total-15')">Bet on Total 15</button>
-            <button onclick="placeBet('total-16')">Bet on Total 16</button>
-            <button onclick="placeBet('total-17')">Bet on Total 17</button>
-            <button onclick="placeBet('single-1')">Bet on Single 1</button>
-            <button onclick="placeBet('single-2')">Bet on Single 2</button>
-            <button onclick="placeBet('single-3')">Bet on Single 3</button>
-            <button onclick="placeBet('single-4')">Bet on Single 4</button>
-            <button onclick="placeBet('single-5')">Bet on Single 5</button>
-            <button onclick="placeBet('single-6')">Bet on Single 6</button>
+            <h2>Place Your Bets</h2>
+            <div class="bet-buttons">
+                <button onclick="placeBet('small')">Small (4-10)</button>
+                <button onclick="placeBet('big')">Big (11-17)</button>
+                <!-- Add buttons for other bets here... -->
+                <button onclick="placeBet('double-1')">Double 1</button>
+                <button onclick="placeBet('double-2')">Double 2</button>
+                <button onclick="placeBet('double-3')">Double 3</button>
+                <button onclick="placeBet('double-4')">Double 4</button>
+                <button onclick="placeBet('double-5')">Double 5</button>
+                <button onclick="placeBet('double-6')">Double 6</button>
+                <button onclick="placeBet('triple-1')">Triple 1</button>
+                <button onclick="placeBet('triple-2')">Triple 2</button>
+                <button onclick="placeBet('triple-3')">Triple 3</button>
+                <button onclick="placeBet('triple-4')">Triple 4</button>
+                <button onclick="placeBet('triple-5')">Triple 5</button>
+                <button onclick="placeBet('triple-6')">Triple 6</button>
+                <button onclick="placeBet('any-triple')">Any Triple</button>
+                <button onclick="placeBet('total-4')">Total 4</button>
+                <button onclick="placeBet('total-5')">Total 5</button>
+                <button onclick="placeBet('total-6')">Total 6</button>
+                <button onclick="placeBet('total-7')">Total 7</button>
+                <button onclick="placeBet('total-8')">Total 8</button>
+                <button onclick="placeBet('total-9')">Total 9</button>
+                <button onclick="placeBet('total-10')">Total 10</button>
+                <button onclick="placeBet('total-11')">Total 11</button>
+                <button onclick="placeBet('total-12')">Total 12</button>
+                <button onclick="placeBet('total-13')">Total 13</button>
+                <button onclick="placeBet('total-14')">Total 14</button>
+                <button onclick="placeBet('total-15')">Total 15</button>
+                <button onclick="placeBet('total-16')">Total 16</button>
+                <button onclick="placeBet('total-17')">Total 17</button>
+                <button onclick="placeBet('single-1')">Single 1</button>
+                <button onclick="placeBet('single-2')">Single 2</button>
+                <button onclick="placeBet('single-3')">Single 3</button>
+                <button onclick="placeBet('single-4')">Single 4</button>
+                <button onclick="placeBet('single-5')">Single 5</button>
+                <button onclick="placeBet('single-6')">Single 6</button>
+            </div>
+        </div>
+        <div class="token-options">
+            <h2>Select Token Amount</h2>
+            <div class="token-buttons">
+                <button onclick="selectToken(100)">100</button>
+                <button onclick="selectToken(200)">200</button>
+                <button onclick="selectToken(500)">500</button>
+                <button onclick="selectToken(1000)">1000</button>
+                <button onclick="selectToken(2500)">2500</button>
+                <button onclick="selectToken(5000)">5000</button>
+                <button onclick="selectToken(10000)">10000</button>
+            </div>
         </div>
         <div class="game-info">
-            <p id="bet-info">Place your bet!</p>
+            <p id="bet-info">Place your bet and select a token amount!</p>
             <button id="roll-dice" onclick="rollDice()" disabled>Roll Dice</button>
         </div>
         <div class="dice-results">
