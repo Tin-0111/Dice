@@ -14,16 +14,6 @@ document.querySelectorAll('.bet-btn').forEach(btn => {
         if (currentTokenValue > 0) {
             const betType = btn.getAttribute('data-type');
             const payout = parseInt(btn.getAttribute('data-payout'));
-            // Clear existing bets for big/small or odd/even
-            if (betType === 'big' || betType === 'small' || betType === 'odd' || betType === 'even') {
-                for (const key in bets) {
-                    if (key === 'big' || key === 'small' || key === 'odd' || key === 'even') {
-                        totalBetAmount -= bets[key];
-                        funds += bets[key];
-                        delete bets[key];
-                    }
-                }
-            }
             if (!bets[betType]) {
                 bets[betType] = 0;
             }
