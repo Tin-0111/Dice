@@ -1,150 +1,79 @@
-let currentBet = {};
-let selectedToken = 0;
-let balance = 5000;
-let hasBetOdd = false;
-let hasBetEven = false;
-let hasBetSmall = false;
-let hasBetBig = false;
+let funds = 10000;
+let currentTokenValue = 0;
+let bets = {};
 
-function updateBalanceDisplay() {
-    document.getElementById('balance').innerText = balance;
+document.querySelectorAll('.token-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentTokenValue = parseInt(btn.getAttribute('data-value'));
+    });
+});
+
+document.querySelectorAll('.bet-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (currentTokenValue > 0) {
+            const betType = btn.getAttribute('data-type');
+            const payout = parseInt(btn.getAttribute('data-payout'));
+            if (!bets[betType]) {
+                bets[betType] = 0;
+            }
+            bets[betType] += currentTokenValue;
+            funds -= currentTokenValue;
+            updateFunds();
+            updateBetSummary();
+        } else {
+            alert("토큰을 먼저 선택하세요.");
+        }
+    });
+});
+
+document.getElementById('roll-dice-btn').addEventListener('click', rollDice);
+
+function updateFunds() {
+    document.getElementById('funds').textContent = funds;
 }
 
-function placeBet(bet) {
-    if (selectedToken === 0) {
-        alert('Please select a token amount first.');
-        return;
+function updateBetSummary() {
+    const betSummary = document.getElementById('bet-summary');
+    betSummary.innerHTML = '<h3>현재 베팅:</h3>';
+    for (const betType in bets) {
+        betSummary.innerHTML += `<p>${betType}: ${bets[betType]} 토큰</p>`;
     }
-    if (selectedToken > balance) {
-        alert('You do not have enough balance to place this bet.');
-        return;
-    }
-
-    // Check for conflicting bets
-    if ((bet === 'odd' && hasBetEven) || (bet === 'even' && hasBetOdd)) {
-        alert('You cannot bet on both Odd and Even.');
-        return;
-    }
-    if ((bet === 'small' && hasBetBig) || (bet === 'big' && hasBetSmall)) {
-        alert('You cannot bet on both Small and Big.');
-        return;
-    }
-
-    // Update bet flags
-    if (bet === 'odd') hasBetOdd = true;
-    if (bet === 'even') hasBetEven = true;
-    if (bet === 'small') hasBetSmall = true;
-    if (bet === 'big') hasBetBig = true;
-
-    if (!currentBet[bet]) {
-        currentBet[bet] = 0;
-    }
-    currentBet[bet] += selectedToken;
-    balance -= selectedToken;
-    updateBalanceDisplay();
-    document.getElementById('bet-info').innerText = `You placed a bet of ${selectedToken} on ${bet}. Total on ${bet}: ${currentBet[bet]}`;
-    document.getElementById('roll-dice').disabled = false;
-    selectedToken = 0;
-}
-
-function selectToken(amount) {
-    selectedToken = amount;
-    document.getElementById('bet-info').innerText = `Selected token amount: ${selectedToken}`;
 }
 
 function rollDice() {
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
     const dice3 = Math.floor(Math.random() * 6) + 1;
-    const sum = dice1 + dice2 + dice3;
-    const diceResults = [dice1, dice2, dice3];
+    const total = dice1 + dice2 + dice3;
+    const resultSummary = document.getElementById('result-summary');
+    resultSummary.innerHTML = `<h3>주사위 결과: ${dice1}, ${dice2}, ${dice3} (총합: ${total})</h3>`;
+    const winSummary = document.createElement('div');
+    const loseSummary = document.createElement('div');
 
-    document.getElementById('dice-result').innerText = `Dice Results: ${dice1}, ${dice2}, ${dice3} (Sum: ${sum})`;
-
-    let resultMessage = '';
-    let winnings = 0;
-
-    // Evaluate all bets
-    for (const bet in currentBet) {
-        const amount = currentBet[bet];
-        if (bet === 'small' || bet === 'big') {
-            if (sum === 3 || sum === 18) {
-                resultMessage += `Bet on ${bet}: Dealer Wins with 3 or 18 - You Lose ${amount}\n`;
-            } else if (bet === 'small' && sum >= 4 && sum <= 10) {
-                resultMessage += `Bet on Small (4-10): You Win ${amount * 2}\n`;
-                winnings += amount * 2;
-            } else if (bet === 'big' && sum >= 11 && sum <= 17) {
-                resultMessage += `Bet on Big (11-17): You Win ${amount * 2}\n`;
-                winnings += amount * 2;
-            } else {
-                resultMessage += `Bet on ${bet}: You Lose ${amount}\n`;
-            }
-        } else if (bet === 'odd' || bet === 'even') {
-            if (sum % 2 === 0 && bet === 'even') {
-                resultMessage += `Bet on Even: You Win ${amount * 2}\n`;
-                winnings += amount * 2;
-            } else if (sum % 2 !== 0 && bet === 'odd') {
-                resultMessage += `Bet on Odd: You Win ${amount * 2}\n`;
-                winnings += amount * 2;
-            } else {
-                resultMessage += `Bet on ${bet}: You Lose ${amount}\n`;
-            }
-        } else if (bet.startsWith('double')) {
-            const number = parseInt(bet.split('-')[1]);
-            const count = diceResults.filter(die => die === number).length;
-            if (count >= 2) {
-                resultMessage += `Bet on Double ${number}: You Win ${amount * 10}\n`;
-                winnings += amount * 10;
-            } else {
-                resultMessage += `Bet on Double ${number}: You Lose ${amount}\n`;
-            }
-        } else if (bet.startsWith('triple')) {
-            const number = parseInt(bet.split('-')[1]);
-            if (diceResults.every(die => die === number)) {
-                resultMessage += `Bet on Triple ${number}: You Win ${amount * 180}\n`;
-                winnings += amount * 180;
-            } else {
-                resultMessage += `Bet on Triple ${number}: You Lose ${amount}\n`;
-            }
-        } else if (bet === 'any-triple') {
-            if (dice1 === dice2 && dice2 === dice3) {
-                resultMessage += `Bet on Any Triple: You Win ${amount * 30}\n`;
-                winnings += amount * 30;
-            } else {
-                resultMessage += `Bet on Any Triple: You Lose ${amount}\n`;
-            }
-        } else if (bet.startsWith('total')) {
-            const total = parseInt(bet.split('-')[1]);
-            const payouts = {
-                4: 62, 5: 31, 6: 18, 7: 12, 8: 8, 9: 7, 10: 6,
-                11: 6, 12: 7, 13: 8, 14: 12, 15: 18, 16: 31, 17: 62
-            };
-            if (sum === total) {
-                resultMessage += `Bet on Total ${total}: You Win ${amount * payouts[total]}\n`;
-                winnings += amount * payouts[total];
-            } else {
-                resultMessage += `Bet on Total ${total}: You Lose ${amount}\n`;
-            }
-        } else if (bet.startsWith('single')) {
-            const number = parseInt(bet.split('-')[1]);
-            const count = diceResults.filter(die => die === number).length;
-            if (count > 0) {
-                resultMessage += `Bet on Single ${number}: You Win ${amount * count}\n`;
-                winnings += amount * (count + 1);
-            } else {
-                resultMessage += `Bet on Single ${number}: You Lose ${amount}\n`;
-            }
+    for (const betType in bets) {
+        const betAmount = bets[betType];
+        if (checkWin(betType, total)) {
+            const payout = betAmount * parseInt(document.querySelector(`.bet-btn[data-type="${betType}"]`).getAttribute('data-payout'));
+            funds += payout;
+            winSummary.innerHTML += `<p style="color: red;">${betType} 베팅 승리! +${payout} 토큰</p>`;
+        } else {
+            loseSummary.innerHTML += `<p style="color: blue;">${betType} 베팅 패배. -${betAmount} 토큰</p>`;
         }
     }
 
-    balance += winnings;
-    updateBalanceDisplay();
+    resultSummary.appendChild(winSummary);
+    resultSummary.appendChild(loseSummary);
+    bets = {};
+    updateFunds();
+    updateBetSummary();
+}
 
-    document.getElementById('result').innerText = resultMessage;
-    currentBet = {};
-    hasBetOdd = false;
-    hasBetEven = false;
-    hasBetSmall = false;
-    hasBetBig = false;
-    document.getElementById('roll-dice').disabled = true;
+function checkWin(betType, total) {
+    if (betType === 'small') {
+        return total >= 4 && total <= 10;
+    } else if (betType === 'big') {
+        return total >= 11 && total <= 17;
+    }
+    // 추가적인 베팅 유형 확인 로직 구현
+    return false;
 }
