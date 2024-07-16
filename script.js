@@ -1,6 +1,8 @@
 let funds = 10000;
 let currentTokenValue = 0;
 let bets = {};
+let previousBets = {};
+let totalBetAmount = 0;
 
 document.querySelectorAll('.token-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -17,6 +19,7 @@ document.querySelectorAll('.bet-btn').forEach(btn => {
                 bets[betType] = 0;
             }
             bets[betType] += currentTokenValue;
+            totalBetAmount += currentTokenValue;
             funds -= currentTokenValue;
             updateFunds();
             updateBetSummary();
@@ -38,9 +41,14 @@ function updateBetSummary() {
     for (const betType in bets) {
         betSummary.innerHTML += `<p>${betType}: ${bets[betType]} 토큰</p>`;
     }
+    document.getElementById('current-bet-amount').textContent = totalBetAmount;
 }
 
 function rollDice() {
+    if (totalBetAmount === 0) {
+        alert("베팅을 먼저 하세요.");
+        return;
+    }
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
     const dice3 = Math.floor(Math.random() * 6) + 1;
@@ -54,8 +62,8 @@ function rollDice() {
         const betAmount = bets[betType];
         if (checkWin(betType, total, dice1, dice2, dice3)) {
             const payout = betAmount * parseInt(document.querySelector(`.bet-btn[data-type="${betType}"]`).getAttribute('data-payout'));
-            funds += payout;
-            winSummary.innerHTML += `<p class="red-text">${betType} 베팅 승리! +${payout} 토큰</p>`;
+            funds += payout + betAmount;
+            winSummary.innerHTML += `<p class="red-text">${betType} 베팅 승리! +${payout + betAmount} 토큰</p>`;
         } else {
             loseSummary.innerHTML += `<p style="color: blue;">${betType} 베팅 패배. -${betAmount} 토큰</p>`;
         }
@@ -63,9 +71,12 @@ function rollDice() {
 
     resultSummary.appendChild(winSummary);
     resultSummary.appendChild(loseSummary);
+    previousBets = bets;
     bets = {};
+    totalBetAmount = 0;
     updateFunds();
     updateBetSummary();
+    highlightWinningBets(winSummary);
 }
 
 function checkWin(betType, total, dice1, dice2, dice3) {
@@ -85,17 +96,32 @@ function checkWin(betType, total, dice1, dice2, dice3) {
         return total === parseInt(betType);
     } else if (betType.startsWith('one-')) {
         const number = parseInt(betType.split('-')[1]);
-        return [dice1, dice2, dice3].filter(dice => dice === number).length === 1;
-    } else if (betType.startsWith('two-')) {
-        const number = parseInt(betType.split('-')[1]);
-        return [dice1, dice2, dice3].filter(dice => dice === number).length === 2;
-    } else if (betType.startsWith('three-')) {
-        const number = parseInt(betType.split('-')[1]);
-        return [dice1, dice2, dice3].filter(dice => dice === number).length === 3;
+        return [dice1, dice2, dice3].filter(dice => dice === number).length > 0;
+    } else if (betType.startsWith('pair-')) {
+        const [num1, num2] = betType.split('-')[1].split('-').map(n => parseInt(n));
+        return ([dice1, dice2, dice3].includes(num1) && [dice1, dice2, dice3].includes(num2));
+    } else if (betType === 'odd') {
+        return total % 2 !== 0;
+    } else if (betType === 'even') {
+        return total % 2 === 0;
     }
     return false;
 }
 
 function isTriple(dice1, dice2, dice3) {
     return dice1 === dice2 && dice2 === dice3;
+}
+
+function highlightWinningBets(winSummary) {
+    const winningBets = winSummary.querySelectorAll('.red-text');
+    winningBets.forEach(bet => {
+        const betType = bet.textContent.split(' ')[0];
+        const button = document.querySelector(`.bet-btn[data-type="${betType}"]`);
+        if (button) {
+            button.style.backgroundColor = 'red';
+            setTimeout(() => {
+                button.style.backgroundColor = '#27ae60';
+            }, 1000);
+        }
+    });
 }
