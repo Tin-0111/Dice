@@ -42,7 +42,7 @@ function placeBet(bet) {
     currentBet[bet] += selectedToken;
     balance -= selectedToken;
     updateBalanceDisplay();
-    document.getElementById('bet-info').innerText = `You have placed ${selectedToken} on ${bet}. Total on ${bet}: ${currentBet[bet]}`;
+    document.getElementById('bet-info').innerText = `You placed a bet of ${selectedToken} on ${bet}. Total on ${bet}: ${currentBet[bet]}`;
     document.getElementById('roll-dice').disabled = false;
     selectedToken = 0;
 }
@@ -130,7 +130,7 @@ function rollDice() {
             const count = diceResults.filter(die => die === number).length;
             if (count > 0) {
                 resultMessage += `Bet on Single ${number}: You Win ${amount * count}\n`;
-                winnings += amount * count;
+                winnings += amount * (count + 1);
             } else {
                 resultMessage += `Bet on Single ${number}: You Lose ${amount}\n`;
             }
