@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>다이사이 게임</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .bet-btn {
+            font-weight: bold;
+        }
+        .bet-btn span.payout {
+            font-weight: normal;
+            font-size: 0.8em;
+        }
+    </style>
 </head>
 <body>
     <h1>🎲🎲🎲</h1>
@@ -21,68 +30,68 @@
     </div>
     <div id="bet-options">
         <div id="top-row">
-            <button class="bet-btn" data-type="small" data-payout="1">작은 수 (1:1)</button>
-            <button class="bet-btn" data-type="big" data-payout="1">큰 수 (1:1)</button>
-            <button class="bet-btn" data-type="odd" data-payout="1">홀수 (1:1)</button>
-            <button class="bet-btn" data-type="even" data-payout="1">짝수 (1:1)</button>
+            <button class="bet-btn" data-type="small" data-payout="1">작은 수 <span class="payout">(1:1)</span></button>
+            <button class="bet-btn" data-type="big" data-payout="1">큰 수 <span class="payout">(1:1)</span></button>
+            <button class="bet-btn" data-type="odd" data-payout="1">홀수 <span class="payout">(1:1)</span></button>
+            <button class="bet-btn" data-type="even" data-payout="1">짝수 <span class="payout">(1:1)</span></button>
         </div>
         <div id="second-row">
-            <button class="bet-btn" data-type="double-1" data-payout="10">Double-1️⃣(10:1)</button>
-            <button class="bet-btn" data-type="double-2" data-payout="10">Double-2️⃣(10:1)</button>
-            <button class="bet-btn" data-type="double-3" data-payout="10">Double-3️⃣(10:1)</button>
-            <button class="bet-btn" data-type="double-4" data-payout="10">Double-4️⃣(10:1)</button>
-            <button class="bet-btn" data-type="double-5" data-payout="10">Double-5️⃣(10:1)</button>
-            <button class="bet-btn" data-type="double-6" data-payout="10">Double-6️⃣(10:1)</button>
+            <button class="bet-btn" data-type="double-1" data-payout="10">Double-1️⃣<span class="payout">(10:1)</span></button>
+            <button class="bet-btn" data-type="double-2" data-payout="10">Double-2️⃣<span class="payout">(10:1)</span></button>
+            <button class="bet-btn" data-type="double-3" data-payout="10">Double-3️⃣<span class="payout">(10:1)</span></button>
+            <button class="bet-btn" data-type="double-4" data-payout="10">Double-4️⃣<span class="payout">(10:1)</span></button>
+            <button class="bet-btn" data-type="double-5" data-payout="10">Double-5️⃣<span class="payout">(10:1)</span></button>
+            <button class="bet-btn" data-type="double-6" data-payout="10">Double-6️⃣<span class="payout">(10:1)</span></button>
         </div>
         <div id="third-row">
-            <button class="bet-btn" data-type="triple-any" data-payout="30">Any Triple (30:1)</button>
-            <button class="bet-btn" data-type="triple-1" data-payout="180">Triple-1️⃣(180:1)</button>
-            <button class="bet-btn" data-type="triple-2" data-payout="180">Triple-2️⃣(180:1)</button>
-            <button class="bet-btn" data-type="triple-3" data-payout="180">Triple-3️⃣(180:1)</button>
-            <button class="bet-btn" data-type="triple-4" data-payout="180">Triple-4️⃣(180:1)</button>
-            <button class="bet-btn" data-type="triple-5" data-payout="180">Triple-5️⃣(180:1)</button>
-            <button class="bet-btn" data-type="triple-6" data-payout="180">Triple-6️⃣(180:1)</button>
+            <button class="bet-btn" data-type="triple-any" data-payout="30">Any Triple <span class="payout">(30:1)</span></button>
+            <button class="bet-btn" data-type="triple-1" data-payout="180">Triple-1️⃣<span class="payout">(180:1)</span></button>
+            <button class="bet-btn" data-type="triple-2" data-payout="180">Triple-2️⃣<span class="payout">(180:1)</span></button>
+            <button class="bet-btn" data-type="triple-3" data-payout="180">Triple-3️⃣<span class="payout">(180:1)</span></button>
+            <button class="bet-btn" data-type="triple-4" data-payout="180">Triple-4️⃣<span class="payout">(180:1)</span></button>
+            <button class="bet-btn" data-type="triple-5" data-payout="180">Triple-5️⃣<span class="payout">(180:1)</span></button>
+            <button class="bet-btn" data-type="triple-6" data-payout="180">Triple-6️⃣<span class="payout">(180:1)</span></button>
         </div>
         <div id="fourth-row">
-            <button class="bet-btn" data-type="<b>4</b>" data-payout="62">4 (62:1)</button>
-            <button class="bet-btn" data-type="5" data-payout="31">5 (31:1)</button>
-            <button class="bet-btn" data-type="6" data-payout="18">6 (18:1)</button>
-            <button class="bet-btn" data-type="7" data-payout="12">7 (12:1)</button>
-            <button class="bet-btn" data-type="8" data-payout="8">8 (8:1)</button>
-            <button class="bet-btn" data-type="9" data-payout="7">9 (7:1)</button>
-            <button class="bet-btn" data-type="10" data-payout="7">10 (7:1)</button>
-            <button class="bet-btn" data-type="11" data-payout="7">11 (7:1)</button>
-            <button class="bet-btn" data-type="12" data-payout="7">12 (7:1)</button>
-            <button class="bet-btn" data-type="13" data-payout="8">13 (8:1)</button>
-            <button class="bet-btn" data-type="14" data-payout="12">14 (12:1)</button>
-            <button class="bet-btn" data-type="15" data-payout="18">15 (18:1)</button>
-            <button class="bet-btn" data-type="16" data-payout="31">16 (31:1)</button>
-            <button class="bet-btn" data-type="17" data-payout="62">17 (62:1)</button>
+            <button class="bet-btn" data-type="4" data-payout="62">4 <span class="payout">(62:1)</span></button>
+            <button class="bet-btn" data-type="5" data-payout="31">5 <span class="payout">(31:1)</span></button>
+            <button class="bet-btn" data-type="6" data-payout="18">6 <span class="payout">(18:1)</span></button>
+            <button class="bet-btn" data-type="7" data-payout="12">7 <span class="payout">(12:1)</span></button>
+            <button class="bet-btn" data-type="8" data-payout="8">8 <span class="payout">(8:1)</span></button>
+            <button class="bet-btn" data-type="9" data-payout="7">9 <span class="payout">(7:1)</span></button>
+            <button class="bet-btn" data-type="10" data-payout="7">10 <span class="payout">(7:1)</span></button>
+            <button class="bet-btn" data-type="11" data-payout="7">11 <span class="payout">(7:1)</span></button>
+            <button class="bet-btn" data-type="12" data-payout="7">12 <span class="payout">(7:1)</span></button>
+            <button class="bet-btn" data-type="13" data-payout="8">13 <span class="payout">(8:1)</span></button>
+            <button class="bet-btn" data-type="14" data-payout="12">14 <span class="payout">(12:1)</span></button>
+            <button class="bet-btn" data-type="15" data-payout="18">15 <span class="payout">(18:1)</span></button>
+            <button class="bet-btn" data-type="16" data-payout="31">16 <span class="payout">(31:1)</span></button>
+            <button class="bet-btn" data-type="17" data-payout="62">17 <span class="payout">(62:1)</span></button>
         </div>
         <div id="fifth-row">
-            <button class="bet-btn" data-type="pair-1-2" data-payout="5">1️⃣,2️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-1-3" data-payout="5">1️⃣,3️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-1-4" data-payout="5">1️⃣,4️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-1-5" data-payout="5">1️⃣,5️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-1-6" data-payout="5">1️⃣,6️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-2-3" data-payout="5">2️⃣,3️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-2-4" data-payout="5">2️⃣,4️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-2-5" data-payout="5">2️⃣,5️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-2-6" data-payout="5">2️⃣,6️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-3-4" data-payout="5">3️⃣,4️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-3-5" data-payout="5">3️⃣,5️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-3-6" data-payout="5">3️⃣,6️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-4-5" data-payout="5">4️⃣,5️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-4-6" data-payout="5">4️⃣,6️⃣(5:1)</button>
-            <button class="bet-btn" data-type="pair-5-6" data-payout="5">5️⃣,6️⃣(5:1)</button>
+            <button class="bet-btn" data-type="pair-1-2" data-payout="5">1️⃣,2️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-1-3" data-payout="5">1️⃣,3️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-1-4" data-payout="5">1️⃣,4️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-1-5" data-payout="5">1️⃣,5️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-1-6" data-payout="5">1️⃣,6️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-2-3" data-payout="5">2️⃣,3️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-2-4" data-payout="5">2️⃣,4️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-2-5" data-payout="5">2️⃣,5️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-2-6" data-payout="5">2️⃣,6️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-3-4" data-payout="5">3️⃣,4️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-3-5" data-payout="5">3️⃣,5️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-3-6" data-payout="5">3️⃣,6️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-4-5" data-payout="5">4️⃣,5️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-4-6" data-payout="5">4️⃣,6️⃣<span class="payout">(5:1)</span></button>
+            <button class="bet-btn" data-type="pair-5-6" data-payout="5">5️⃣,6️⃣<span class="payout">(5:1)</span></button>
         </div>
         <div id="sixth-row">
-            <button class="bet-btn" data-type="one-1" data-payout="1">1️⃣(1:1/3/5)</button>
-            <button class="bet-btn" data-type="one-2" data-payout="1">2️⃣(1:1/3/5)</button>
-            <button class="bet-btn" data-type="one-3" data-payout="1">3️⃣(1:1/3/5)</button>
-            <button class="bet-btn" data-type="one-4" data-payout="1">4️⃣(1:1/3/5)</button>
-            <button class="bet-btn" data-type="one-5" data-payout="1">5️⃣(1:1/3/5)</button>
-            <button class="bet-btn" data-type="one-6" data-payout="1">6️⃣(1:1/3/5)</button>
+            <button class="bet-btn" data-type="one-1" data-payout="1">1️⃣<span class="payout">(1:1/3/5)</span></button>
+            <button class="bet-btn" data-type="one-2" data-payout="1">2️⃣<span class="payout">(1:1/3/5)</span></button>
+            <button class="bet-btn" data-type="one-3" data-payout="1">3️⃣<span class="payout">(1:1/3/5)</span></button>
+            <button class="bet-btn" data-type="one-4" data-payout="1">4️⃣<span class="payout">(1:1/3/5)</span></button>
+            <button class="bet-btn" data-type="one-5" data-payout="1">5️⃣<span class="payout">(1:1/3/5)</span></button>
+            <button class="bet-btn" data-type="one-6" data-payout="1">6️⃣<span class="payout">(1:1/3/5)</span></button>
         </div>
     </div>
     <button id="roll-dice-btn">주사위 굴리기</button>
