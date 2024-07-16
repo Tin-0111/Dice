@@ -1,15 +1,47 @@
 let currentBet = {};
 let selectedToken = 0;
+let balance = 5000;
+let hasBetOdd = false;
+let hasBetEven = false;
+let hasBetSmall = false;
+let hasBetBig = false;
+
+function updateBalanceDisplay() {
+    document.getElementById('balance').innerText = balance;
+}
 
 function placeBet(bet) {
     if (selectedToken === 0) {
         alert('Please select a token amount first.');
         return;
     }
+    if (selectedToken > balance) {
+        alert('You do not have enough balance to place this bet.');
+        return;
+    }
+
+    // Check for conflicting bets
+    if ((bet === 'odd' && hasBetEven) || (bet === 'even' && hasBetOdd)) {
+        alert('You cannot bet on both Odd and Even.');
+        return;
+    }
+    if ((bet === 'small' && hasBetBig) || (bet === 'big' && hasBetSmall)) {
+        alert('You cannot bet on both Small and Big.');
+        return;
+    }
+
+    // Update bet flags
+    if (bet === 'odd') hasBetOdd = true;
+    if (bet === 'even') hasBetEven = true;
+    if (bet === 'small') hasBetSmall = true;
+    if (bet === 'big') hasBetBig = true;
+
     if (!currentBet[bet]) {
         currentBet[bet] = 0;
     }
     currentBet[bet] += selectedToken;
+    balance -= selectedToken;
+    updateBalanceDisplay();
     document.getElementById('bet-info').innerText = `You have placed ${selectedToken} on ${bet}. Total on ${bet}: ${currentBet[bet]}`;
     document.getElementById('roll-dice').disabled = false;
     selectedToken = 0;
@@ -47,64 +79,72 @@ function rollDice() {
             } else {
                 resultMessage += `Bet on ${bet}: You Lose ${amount}\n`;
             }
+        } else if (bet === 'odd' || bet === 'even') {
+            if (sum % 2 === 0 && bet === 'even') {
+                resultMessage += `Bet on Even: You Win ${amount * 2}\n`;
+                winnings += amount * 2;
+            } else if (sum % 2 !== 0 && bet === 'odd') {
+                resultMessage += `Bet on Odd: You Win ${amount * 2}\n`;
+                winnings += amount * 2;
+            } else {
+                resultMessage += `Bet on ${bet}: You Lose ${amount}\n`;
+            }
         } else if (bet.startsWith('double')) {
             const number = parseInt(bet.split('-')[1]);
             const count = diceResults.filter(die => die === number).length;
             if (count >= 2) {
-                resultMessage += `Bet on Double ${number}: You Win ${amount * 11}\n`;
-                winnings += amount * 11;
+                resultMessage += `Bet on Double ${number}: You Win ${amount * 10}\n`;
+                winnings += amount * 10;
             } else {
                 resultMessage += `Bet on Double ${number}: You Lose ${amount}\n`;
             }
         } else if (bet.startsWith('triple')) {
             const number = parseInt(bet.split('-')[1]);
-            const count = diceResults.filter(die => die === number).length;
-            if (count === 3) {
+            if (diceResults.every(die => die === number)) {
                 resultMessage += `Bet on Triple ${number}: You Win ${amount * 180}\n`;
                 winnings += amount * 180;
             } else {
                 resultMessage += `Bet on Triple ${number}: You Lose ${amount}\n`;
             }
         } else if (bet === 'any-triple') {
-            const counts = {};
-            diceResults.forEach(die => counts[die] = (counts[die] || 0) + 1);
-            if (Object.values(counts).some(count => count === 3)) {
+            if (dice1 === dice2 && dice2 === dice3) {
                 resultMessage += `Bet on Any Triple: You Win ${amount * 30}\n`;
                 winnings += amount * 30;
             } else {
                 resultMessage += `Bet on Any Triple: You Lose ${amount}\n`;
             }
         } else if (bet.startsWith('total')) {
-            const number = parseInt(bet.split('-')[1]);
-            if (sum === number) {
-                resultMessage += `Bet on Total ${number}: You Win ${amount * getTotalPayout(number)}\n`;
-                winnings += amount * getTotalPayout(number);
+            const total = parseInt(bet.split('-')[1]);
+            const payouts = {
+                4: 62, 5: 31, 6: 18, 7: 12, 8: 8, 9: 7, 10: 6,
+                11: 6, 12: 7, 13: 8, 14: 12, 15: 18, 16: 31, 17: 62
+            };
+            if (sum === total) {
+                resultMessage += `Bet on Total ${total}: You Win ${amount * payouts[total]}\n`;
+                winnings += amount * payouts[total];
             } else {
-                resultMessage += `Bet on Total ${number}: You Lose ${amount}\n`;
+                resultMessage += `Bet on Total ${total}: You Lose ${amount}\n`;
             }
         } else if (bet.startsWith('single')) {
             const number = parseInt(bet.split('-')[1]);
             const count = diceResults.filter(die => die === number).length;
             if (count > 0) {
-                resultMessage += `Bet on Single ${number}: Appeared ${count} time(s) - You Win ${amount * (count + 1)}\n`;
-                winnings += amount * (count + 1);
+                resultMessage += `Bet on Single ${number}: You Win ${amount * count}\n`;
+                winnings += amount * count;
             } else {
                 resultMessage += `Bet on Single ${number}: You Lose ${amount}\n`;
             }
         }
     }
 
-    document.getElementById('result').innerText = resultMessage + `\nTotal Winnings: ${winnings}`;
-    document.getElementById('roll-dice').disabled = true;
-    currentBet = {};
-    document.getElementById('bet-info').innerText = 'Place your bet and select a token amount!';
-}
+    balance += winnings;
+    updateBalanceDisplay();
 
-function getTotalPayout(total) {
-    const payouts = {
-        4: 62, 5: 31, 6: 18, 7: 12, 8: 8, 9: 7,
-        10: 6, 11: 6, 12: 7, 13: 8, 14: 12, 15: 18,
-        16: 31, 17: 62
-    };
-    return payouts[total] || 1;
+    document.getElementById('result').innerText = resultMessage;
+    currentBet = {};
+    hasBetOdd = false;
+    hasBetEven = false;
+    hasBetSmall = false;
+    hasBetBig = false;
+    document.getElementById('roll-dice').disabled = true;
 }
