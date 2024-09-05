@@ -1,66 +1,141 @@
 import pygame
-import sys
+import random
 
-# 초기화
-pygame.init()
-
-# 화면 크기 설정
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-
-# 색상 정의
+# 색상 설정
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (128, 128, 128)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+CYAN = (0, 255, 255)
+YELLOW = (255, 255, 0)
+MAGENTA = (255, 0, 255)
+ORANGE = (255, 165, 0)
 
-# 공 설정
-ball_size = 20
-ball_x = screen_width // 2
-ball_y = screen_height // 2
-ball_speed_x = 0
-ball_speed_y = 0
-ball_speed = 5
+# 블록 모양
+SHAPES = [
+    [[1, 1, 1, 1]],  # I
+    [[1, 1], [1, 1]],  # O
+    [[0, 1, 0], [1, 1, 1]],  # T
+    [[1, 1, 0], [0, 1, 1]],  # Z
+    [[0, 1, 1], [1, 1, 0]],  # S
+    [[1, 1, 1], [1, 0, 0]],  # L
+    [[1, 1, 1], [0, 0, 1]]  # J
+]
 
-# 게임 루프
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+# 블록 색상
+SHAPE_COLORS = [CYAN, YELLOW, MAGENTA, GREEN, RED, BLUE, ORANGE]
 
-        # 키 입력 처리
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                ball_speed_x = -ball_speed
-            if event.key == pygame.K_RIGHT:
-                ball_speed_x = ball_speed
-            if event.key == pygame.K_UP:
-                ball_speed_y = -ball_speed
-            if event.key == pygame.K_DOWN:
-                ball_speed_y = ball_speed
+# 게임 설정
+GRID_WIDTH = 10
+GRID_HEIGHT = 20
+BLOCK_SIZE = 30
+SCREEN_WIDTH = GRID_WIDTH * BLOCK_SIZE
+SCREEN_HEIGHT = GRID_HEIGHT * BLOCK_SIZE
+FPS = 10
 
-        if event.type == pygame.KEYUP:
-            if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
-                ball_speed_x = 0
-            if event.key in [pygame.K_UP, pygame.K_DOWN]:
-                ball_speed_y = 0
+# 블록 클래스
+class Block:
+    def __init__(self, shape):
+        self.shape = shape
+        self.color = SHAPE_COLORS[SHAPES.index(shape)]
+        self.x = GRID_WIDTH // 2 - len(shape[0]) // 2
+        self.y = 0
 
-    # 공 위치 업데이트
-    ball_x += ball_speed_x
-    ball_y += ball_speed_y
+    def rotate(self):
+        self.shape = [list(row) for row in zip(*self.shape[::-1])]
 
-    # 화면을 흰색으로 채움
-    screen.fill(WHITE)
+# 테트리스 게임 클래스
+class Tetris:
+    def __init__(self):
+        self.grid = [[BLACK for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        self.block = self.new_block()
 
-    # 공 그리기
-    pygame.draw.circle(screen, BLUE, (ball_x, ball_y), ball_size)
+    def new_block(self):
+        return Block(random.choice(SHAPES))
 
-    # 화면 업데이트
-    pygame.display.flip()
+    def is_valid_position(self, block, adj_x=0, adj_y=0):
+        for y, row in enumerate(block.shape):
+            for x, cell in enumerate(row):
+                if cell:
+                    new_x = block.x + x + adj_x
+                    new_y = block.y + y + adj_y
+                    if new_x < 0 or new_x >= GRID_WIDTH or new_y >= GRID_HEIGHT:
+                        return False
+                    if new_y >= 0 and self.grid[new_y][new_x] != BLACK:
+                        return False
+        return True
 
-    # 초당 60프레임으로 설정
-    pygame.time.Clock().tick(60)
+    def freeze_block(self):
+        for y, row in enumerate(self.block.shape):
+            for x, cell in enumerate(row):
+                if cell:
+                    self.grid[self.block.y + y][self.block.x + x] = self.block.color
+        self.block = self.new_block()
 
-# 종료
-pygame.quit()
-sys.exit()
+        if not self.is_valid_position(self.block):
+            self.grid = [[BLACK for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+
+    def remove_full_lines(self):
+        new_grid = [row for row in self.grid if BLACK in row]
+        while len(new_grid) < GRID_HEIGHT:
+            new_grid.insert(0, [BLACK for _ in range(GRID_WIDTH)])
+        self.grid = new_grid
+
+    def move_block(self, dx, dy):
+        if self.is_valid_position(self.block, dx, dy):
+            self.block.x += dx
+            self.block.y += dy
+        elif dy > 0:
+            self.freeze_block()
+            self.remove_full_lines()
+
+    def rotate_block(self):
+        old_shape = self.block.shape
+        self.block.rotate()
+        if not self.is_valid_position(self.block):
+            self.block.shape = old_shape
+
+    def draw(self, screen):
+        for y in range(GRID_HEIGHT):
+            for x in range(GRID_WIDTH):
+                pygame.draw.rect(screen, self.grid[y][x], (x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 0)
+        for y, row in enumerate(self.block.shape):
+            for x, cell in enumerate(row):
+                if cell:
+                    pygame.draw.rect(screen, self.block.color, ((self.block.x + x) * BLOCK_SIZE, (self.block.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 0)
+
+# 메인 게임 루프
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    clock = pygame.time.Clock()
+    tetris = Tetris()
+    running = True
+
+    while running:
+        screen.fill(BLACK)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    tetris.move_block(-1, 0)
+                elif event.key == pygame.K_RIGHT:
+                    tetris.move_block(1, 0)
+                elif event.key == pygame.K_DOWN:
+                    tetris.move_block(0, 1)
+                elif event.key == pygame.K_UP:
+                    tetris.rotate_block()
+
+        tetris.move_block(0, 1)
+        tetris.draw(screen)
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    pygame.quit()
+
+if __name__ == '__main__':
+    main()
