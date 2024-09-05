@@ -1,0 +1,66 @@
+import pygame
+import sys
+
+# 초기화
+pygame.init()
+
+# 화면 크기 설정
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+# 색상 정의
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+
+# 공 설정
+ball_size = 20
+ball_x = screen_width // 2
+ball_y = screen_height // 2
+ball_speed_x = 0
+ball_speed_y = 0
+ball_speed = 5
+
+# 게임 루프
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        # 키 입력 처리
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                ball_speed_x = -ball_speed
+            if event.key == pygame.K_RIGHT:
+                ball_speed_x = ball_speed
+            if event.key == pygame.K_UP:
+                ball_speed_y = -ball_speed
+            if event.key == pygame.K_DOWN:
+                ball_speed_y = ball_speed
+
+        if event.type == pygame.KEYUP:
+            if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
+                ball_speed_x = 0
+            if event.key in [pygame.K_UP, pygame.K_DOWN]:
+                ball_speed_y = 0
+
+    # 공 위치 업데이트
+    ball_x += ball_speed_x
+    ball_y += ball_speed_y
+
+    # 화면을 흰색으로 채움
+    screen.fill(WHITE)
+
+    # 공 그리기
+    pygame.draw.circle(screen, BLUE, (ball_x, ball_y), ball_size)
+
+    # 화면 업데이트
+    pygame.display.flip()
+
+    # 초당 60프레임으로 설정
+    pygame.time.Clock().tick(60)
+
+# 종료
+pygame.quit()
+sys.exit()
