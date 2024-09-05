@@ -94,6 +94,15 @@ class Tetris:
     def rotate_block(self):
         old_shape = self.block.shape
         self.block.rotate()
+
+        # 회전 후 블록이 벽을 넘지 않도록 조정
+        if not self.is_valid_position(self.block):
+            if self.block.x < 0:
+                self.block.x = 0  # 왼쪽 벽
+            elif self.block.x + len(self.block.shape[0]) > GRID_WIDTH:
+                self.block.x = GRID_WIDTH - len(self.block.shape[0])  # 오른쪽 벽
+
+        # 회전이 유효하지 않으면 이전 모양으로 복구
         if not self.is_valid_position(self.block):
             self.block.shape = old_shape
 
@@ -127,7 +136,9 @@ def main():
                 elif event.key == pygame.K_DOWN:
                     tetris.move_block(0, 1)
                 elif event.key == pygame.K_UP:
-                    tetris.rotate_block()
+                    tetris.rotate_block()  # 위쪽 화살표로 회전
+                elif event.key == pygame.K_SPACE:
+                    tetris.rotate_block()  # 스페이스 키로 블록을 회전
 
         tetris.move_block(0, 1)
         tetris.draw(screen)
